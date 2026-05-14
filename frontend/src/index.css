@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
+
+@media print {
+  .no-print,
+  header,
+  nav,
+  button:not(.print-only),
+  .leaflet-container,
+  textarea,
+  .sticky {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .shadow-sm,
+  .shadow-lg,
+  .shadow-md {
+    box-shadow: none !important;
+  }
+
+  .rounded-2xl,
+  .rounded-xl {
+    border-radius: 0 !important;
+  }
+
+  .border,
+  .border-gray-100,
+  .border-amber-100 {
+    border: 1px solid #e5e7eb !important;
+  }
+
+  .bg-gradient-to-r {
+    background: none !important;
+    background-color: #f9fafb !important;
+  }
+}
