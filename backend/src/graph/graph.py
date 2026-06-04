@@ -8,6 +8,7 @@ from .nodes.estimate_budget import estimate_budget_node
 from .nodes.fetch_weather import fetch_weather
 from .nodes.llm_plan import llm_plan
 from .nodes.parse_input import parse_input
+from .nodes.search_knowledge import search_knowledge
 from .nodes.search_poi import search_poi
 from .nodes.validate_output import validate_output
 from .state import TravelAgentState
@@ -16,6 +17,7 @@ builder = StateGraph(TravelAgentState)
 
 # 注册节点
 builder.add_node("parse_input", parse_input)
+builder.add_node("search_knowledge", search_knowledge)
 builder.add_node("fetch_weather", fetch_weather)
 builder.add_node("search_poi", search_poi)
 builder.add_node("estimate_budget", estimate_budget_node)
@@ -25,7 +27,8 @@ builder.add_node("validate_output", validate_output)
 
 # 编排边
 builder.add_edge(START, "parse_input")
-builder.add_edge("parse_input", "fetch_weather")
+builder.add_edge("parse_input", "search_knowledge")
+builder.add_edge("search_knowledge", "fetch_weather")
 builder.add_edge("fetch_weather", "search_poi")
 builder.add_edge("search_poi", "estimate_budget")
 builder.add_edge("estimate_budget", "assemble_context")

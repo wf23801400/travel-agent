@@ -2,6 +2,7 @@
 
 from .budget_estimator import BudgetBreakdown, BudgetInput, BudgetOutput, estimate_budget
 from .geo_tool import DistCalcInput, DistCalcOutput, GeoInput, GeoOutput, calculate_distance, get_city_coords
+from .knowledge_retriever import TfidfRetriever, get_retriever, retrieve_knowledge
 from .poi_search import POISearchInput, POISearchOutput, Place, search_pois
 from .route_tool import RouteInput, RouteOutput, get_route
 from .weather_tool import DailyWeather, WeatherInput, WeatherOutput, get_forecast
@@ -33,4 +34,8 @@ __all__ = [
     "BudgetInput",
     "BudgetOutput",
     "BudgetBreakdown",
+    # knowledge
+    "retrieve_knowledge",
+    "get_retriever",
+    "TfidfRetriever",
 ]

@@ -104,6 +104,7 @@ def _build_system_prompt() -> str:
 5. **多样化** — 每天的活动类型应多样化，不要全是景点或全是美食
 6. **时间合理** — 每个活动的时间段要合理（景点2-3小时，餐饮1-2小时，购物1-2小时）
 7. **货币单位** — 所有价格以人民币(元)为单位，不要使用当地货币
+8. **攻略优先** — 如果 context 中包含「知识库攻略」片段，优先参考其中的行程安排、费用预算、住宿推荐等实用信息
 
 ## 输出格式
 严格按照 Itinerary schema 输出，每个 DayPlan 需包含：
@@ -174,6 +175,14 @@ def _build_user_prompt(
             if h.get('address'):
                 parts.append(f"  地址: {h['address']}")
         parts.append("请优先选用以上推荐住宿，并为行程每天安排合适的住宿活动（accommodation）。")
+
+    # 知识库攻略
+    knowledge = context.get("knowledge", [])
+    if knowledge:
+        parts.append(f"\n## 知识库攻略（来自已有旅行攻略，优先参考）")
+        for k in knowledge:
+            parts.append(f"\n### {k.get('title', '攻略')} (相关度: {k.get('score', 0):.2f})")
+            parts.append(k.get("text", ""))
 
     # 预算信息
     budget = context.get("budget", {})

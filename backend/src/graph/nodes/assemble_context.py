@@ -74,6 +74,18 @@ async def assemble_context(state: TravelAgentState) -> dict:
             "per_person": budget_data.per_person,
         }
 
+    # 注入知识库检索结果（攻略片段）
+    knowledge_results = state.get("knowledge_results", [])
+    if knowledge_results:
+        context["knowledge"] = [
+            {
+                "title": r["title"],
+                "text": r["text"],
+                "score": r["score"],
+            }
+            for r in knowledge_results
+        ]
+
     # 生成 LLM system prompt 所需的文本摘要
     context["summary"] = _build_summary(context)
 
@@ -114,5 +126,10 @@ def _build_summary(context: dict) -> str:
     if hotels:
         hotel_names = [h["name"] for h in hotels]
         parts.append(f"推荐住宿: {', '.join(hotel_names)}")
+
+    knowledge = context.get("knowledge", [])
+    if knowledge:
+        k_titles = [k["title"] for k in knowledge]
+        parts.append(f"攻略参考: {', '.join(k_titles)}")
 
     return "\n".join(parts)

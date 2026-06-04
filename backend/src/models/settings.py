@@ -1,13 +1,28 @@
 """应用配置，从环境变量加载。"""
 
+import os
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def _resolve_env_files() -> list[str]:
+    """解析 .env 文件列表：项目 .env + 共享 C:\code\.env。"""
+    paths = []
+    project_env = Path(__file__).parent.parent.parent.parent / ".env"
+    if project_env.exists():
+        paths.append(str(project_env))
+    shared_env = Path("C:/code/.env")
+    if shared_env.exists():
+        paths.append(str(shared_env))
+    return paths
 
 
 class Settings(BaseSettings):
     """全局配置，API key 从 .env 文件或环境变量读取。"""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_resolve_env_files(),
         env_file_encoding="utf-8",
         extra="ignore",
     )

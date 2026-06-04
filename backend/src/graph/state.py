@@ -21,3 +21,4 @@ class TravelAgentState(TypedDict, total=False):
     validation_errors: list[str]
     retry_count: int
     refine_feedback: str | None
+    knowledge_results: list[dict]

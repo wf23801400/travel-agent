@@ -1,12 +1,13 @@
 """搜索兴趣点节点。"""
 
-from src.tools import POISearchInput, search_pois
+from src.tools import POISearchInput, POISearchOutput, search_pois
+from src.tools.cache import poi_cache
 
 from ..state import TravelAgentState
 
 
 async def search_poi(state: TravelAgentState) -> dict:
-    """调用 poi_search.search_pois 搜索目的地周边兴趣点。"""
+    """调用 poi_search.search_pois 搜索目的地周边兴趣点（带 TTL 缓存）。"""
     request = state.get("request")
     if request is None:
         return {"poi_data": None}
@@ -20,12 +21,13 @@ async def search_poi(state: TravelAgentState) -> dict:
             radius_km=10.0,
             limit=5,
         )
-        result = await search_pois(poi_input)
+        result = await poi_cache.get_or_set(
+            (request.destination, category), {},
+            lambda dest, cat: search_pois(poi_input),
+        )
         for place in result.places:
             if place.name not in all_places:
                 all_places[place.name] = place
-
-    from src.tools import POISearchOutput
 
     poi_data = POISearchOutput(places=list(all_places.values()))  # type: ignore[arg-type]
     return {"poi_data": poi_data}
